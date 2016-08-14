@@ -1,0 +1,23 @@
+{
+  "visual": {
+    "name": "sJKP.PbiViz.HellowWorld",
+    "displayName": "SJKP.PbiViz.HellowWorld",
+    "guid": "PBI_CV_EED04B38_70C9_4723_9C08_538DDC65A5FD",
+    "visualClassName": "Visual",
+    "version": "1.0.0",
+    "description": "",
+    "supportUrl": "",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "1.1.0",
+  "author": {
+    "name": "",
+    "email": ""
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json"
+}
