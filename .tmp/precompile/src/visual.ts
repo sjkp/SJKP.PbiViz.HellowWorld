@@ -28,7 +28,7 @@ module powerbi.extensibility.visual.PBI_CV_EED04B38_70C9_4723_9C08_538DDC65A5FD 
     export class Visual implements IVisual {
         private target: HTMLElement;
         private updateCount: number;
-
+        private dataView: DataView;
         constructor(options: VisualConstructorOptions) {
             console.log('Visual constructor', options);
             this.target = options.element;
@@ -36,13 +36,87 @@ module powerbi.extensibility.visual.PBI_CV_EED04B38_70C9_4723_9C08_538DDC65A5FD 
         }
 
         public update(options: VisualUpdateOptions) {
-            console.log('Visual update', options);            
-            this.target.innerHTML = `<p>Update count: <em>${(this.updateCount++)}</em></p>`;
+            this.dataView = options.dataViews[0];
+            var model = this.transform(this.dataView);
+            console.log('Visual update', options);           
+            console.log(options.dataViews); 
+            var htmlString = `<p>Update count: <em>${(this.updateCount++)}</em>
+            <img src="${getValue<string>(this.dataView.metadata.objects, 'settings', 'baseUri', "http://")}"/>"
+            </p>`;
+             
+            
+            this.target.innerHTML = htmlString + this.render(model);
         }
 
         public destroy(): void {
             //TODO: Perform any cleanup tasks here
-        }   
+        } 
 
+        public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
+            var instances: VisualObjectInstance[] = [];
+            switch (options.objectName) {
+                case 'settings':
+                    var settings: VisualObjectInstance = {
+                        objectName: 'settings',
+                        displayName: 'Settings',
+                        selector: null,
+                        properties: {
+                            baseUri: getValue<string>(this.dataView.metadata.objects, 'settings', 'baseUri', "http://"),
+                            toggle: getValue<boolean>(this.dataView.metadata.objects, 'settings', 'toggle', true),
+                            show: getValue<boolean>(this.dataView.metadata.objects, 'settings', 'show', false),
+                        }
+                    };
+                    instances.push(settings);
+                    break;
+            }
+
+            return instances;
+        }  
+
+        private transform(data: DataView) : any
+        {
+
+            var model = [];
+            data.categorical.categories.forEach((value, i) => {
+                
+                value.values.forEach((header, i) => {
+                    model.push({'header': header, 'values': []});
+                });
+                
+            });
+
+            data.categorical.values.forEach((value) => {
+                value.values.forEach((v,i) => {
+                    model[i].values.push(v);
+                });
+            });
+
+            return model;
+        }
+
+        private render(model)
+        {
+
+            var html = "<table><thead>";
+            model.forEach((category, i) => {
+                html += `<th>${category.header}</th>`;
+                
+            });
+            html += "</thead><tbody>";
+
+            for(var i=0; i< model[0].values.length;i++)
+            {
+                html+= "<tr>";
+                model.forEach((category)=> {
+                    html += `<td>${category.values[i]}</td>`;
+                });
+                html+= "</tr>";
+            }
+
+            html += '</tbody></table>';
+            debugger;
+
+            return html;
+        }
     }
 }

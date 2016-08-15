@@ -3,7 +3,7 @@
         {
             "displayName": "Category Data",
             "name": "category",
-            "kind": 0
+            "kind": 0 
         },
         {
             "displayName": "Measure Data",
@@ -33,5 +33,31 @@
                 }
             }
         }
-    ]
+    ],
+    "objects": {
+        "settings": {
+            "displayName": "Settings",
+            "properties": {
+                "baseUri": {
+                    "displayName": "Server Url",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "toggle": {
+                    "displayName": "Enable",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "show": {
+                    "displayName": "My Property Switch",
+                    "type": {
+                        "bool": true
+                    }
+                }
+                
+            }
+        }
+    }
 }
